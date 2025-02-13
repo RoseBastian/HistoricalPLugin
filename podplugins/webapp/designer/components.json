@@ -1,0 +1,14 @@
+{
+  "components": [
+    {
+      "id": "stelliumPackingPlugin_1",
+      "type": "VIEW_PLUGIN",
+      "allowMultipleInstances": false,
+      "name": "rose.ext.podplugins.TdoAdminScreen",
+      "propertyEditor": "rose.ext.podplugins.TdoAdminScreen.builder.PropertyEditor",
+      "i18n": "rose.ext.podplugins.TdoAdminScreen.i18n.i18n",
+      "productionProcessEnabled": false,
+      "supportedPodTypes": ["WORK_CENTER", "OPERATION", "ORDER", "OTHER", "MONITOR"]
+    }
+  ]
+}

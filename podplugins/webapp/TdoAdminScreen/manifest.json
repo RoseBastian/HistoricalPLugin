@@ -1,0 +1,31 @@
+{
+    "sap.app": {
+        "id": "rose.ext.podplugins.TdoAdminScreen",
+        "type": "component",
+        "applicationVersion": {
+            "version": "1.0.0"
+        },
+        "embeddedBy": "../"
+    },
+
+    "sap.ui5": {
+        "rootView": {
+            "viewName": "rose.ext.podplugins.TdoAdminScreen.view.PluginView",
+            "type": "XML",
+            "id": "TdoAdminScreen"
+        },
+        "resources": {
+            "css": [{
+                "uri": "css/style.css"
+            }]
+        },
+        "models": {
+            "i18n": {
+                "type": "sap.ui.model.resource.ResourceModel",
+                "settings": {
+                    "bundleName": "rose.ext.podplugins.TdoAdminScreen.i18n.i18n"
+                }
+            }
+        }
+    }
+}
