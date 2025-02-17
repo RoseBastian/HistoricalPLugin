@@ -1,234 +1,130 @@
-<mvc:View 
-    controllerName="rose.ext.podplugins.TdoAdminScreen.controller.PluginView" 
-    xmlns:mvc="sap.ui.core.mvc" 
-    xmlns:filterbar="sap.ui.comp.filterbar" 
+<mvc:View controllerName="rose.ext.podplugins.TdoAdminScreen.controller.PluginView"
+    xmlns:mvc="sap.ui.core.mvc"
+    xmlns:filterbar="sap.ui.comp.filterbar"
     xmlns:core="sap.ui.core"
-    xmlns:f="sap.f" 
-    xmlns="sap.m" 
-    width="100%" 
-    height="100%">
+    xmlns:f="sap.f"
+    xmlns="sap.m" width="100%" height="100%">
     <f:DynamicPage id="idMassOpAsmtPage" showFooter="true">
         <f:header>
-            <f:DynamicPageHeader id="idMassOpAsmtDynHeader">
+            <f:DynamicPageHeader class="header" id="idMassOpAsmtDynHeader">
                 <filterbar:FilterBar id="idFilterBar" useToolbar="false" search=".onFBSearch">
-                    <filterbar:filterGroupItems>
-                    <filterbar:FilterGroupItem 
-                            id="idWorkCentre"
-                            name="WorkCentre"
-                            label="Work Centre"
-                            groupName="Group1"
-                            visibleInFilterBar="true">
-                            <filterbar:control>
-                                <ComboBox id="idWorkCentreComboBox"
-                                    items="{workCenterData>/workCenters}"
-                                    selectedKey="{viewModel>/selectedWorkCentre}"
-                                    selectionChange=".onWorkCentreChange">
-                                    <core:Item key="{workCenterData>workCentreId}" text="{workCenterData>workCentreId}"/>
-                                </ComboBox>
-                            </filterbar:control>
-                        </filterbar:FilterGroupItem>
-                         <filterbar:FilterGroupItem id="idOrderSearch"
-                            name="Order"
-                            label="Order"
-                            groupName="Group1"
-                            mandatory="true"
-                            visibleInFilterBar="true">
+                    <filterbar:filterGroupItems id="idFilterGroupItems">
+
+                        <!-- Order Input Field -->
+                        <filterbar:FilterGroupItem id="idOrderSearch" name="Order" label="Order" groupName="Group1" mandatory="true" visibleInFilterBar="true">
                             <filterbar:control>
                                 <Input id="idOrderFilterInput" required="true" change=".onOrderInputChange"/>
                             </filterbar:control>
                         </filterbar:FilterGroupItem>
-                        <filterbar:FilterGroupItem id="idSFCList"
-                            name="SFC"
-                            label="SFC"
-                            groupName="Group1"
-                            mandatory="true"
-                            visibleInFilterBar="true">
+
+                        <!-- SFC Dropdown -->
+                        <filterbar:FilterGroupItem id="idSFCList" name="SFC" label="SFC" groupName="Group1" mandatory="true" visibleInFilterBar="true">
                             <filterbar:control>
-                                <Select id="idSFCSelect" 
-                                    items="{orderData>/sfcs}" 
-                                    change=".onSFCSelectionChange">
-                                    <core:Item key="{orderData>sfc}" text="{orderData>sfc}"/>
+                                <Select id="idSFCSelect" items="{orderData>/sfcs}" selectedKey="{viewModel>/selectedSFC}" change=".onSFCSelectionChange">
+                                    <core:Item key="{orderData>}" text="{orderData>}"/>
                                 </Select>
                             </filterbar:control>
                         </filterbar:FilterGroupItem>
-                        <filterbar:FilterGroupItem 
-                            id="idMaterial"
-                            name="Material"
-                            label="Material"
-                            groupName="Group1"
-                            visibleInFilterBar="true">
+
+
+                        <!-- Material (Plain Text) -->
+                        <filterbar:FilterGroupItem id="idMaterial" name="Material" label="Material" groupName="Group1" visibleInFilterBar="true">
                             <filterbar:control>
-                                <ComboBox id="idMaterialComboBox"
-                                    items="{workCenterData>materials}"
-                                    selectedKey="{viewModel>/selectedMaterial}"
-                                    selectionChange=".onMaterialChange"
-                                    enabled="{= !!${viewModel>/selectedWorkCentre}}"
-                                    placeholder="Select Material">
-                                    <core:Item key="{workCenterData>materialId}" text="{workCenterData>materialId}"/>
-                                </ComboBox>
+                                <Text id="idMaterialText" text="{viewModel>/selectedMaterial}"/>
+                            </filterbar:control>
+                        </filterbar:FilterGroupItem>
+
+                        <!-- Material Description (Plain Text) -->
+                        <filterbar:FilterGroupItem id="idMaterialDescription" name="Description" label="Material Description" groupName="Group1" visibleInFilterBar="true">
+                            <filterbar:control>
+                                <Text id="idMaterialDescriptionText" text="{viewModel>/selectedMaterialDesc}"/>
                             </filterbar:control>
                         </filterbar:FilterGroupItem>
                     </filterbar:filterGroupItems>
                 </filterbar:FilterBar>
             </f:DynamicPageHeader>
         </f:header>
+
         <f:content>
-            <Table id="idMassOpAsmtTable" 
-                mode="MultiSelect"
-                selectionChange=".onTableItemsSelectionChange"
-                items="{
-                    path:'viewModel>/lineItems',
-                    sorter: [
-                        {
-                            path: 'workCenter',
-                            descending: false
-                        },
-                        {
-                            path: 'phaseId',
-                            descending: false
-                        },
-                        {
-                            path: 'component',
-                            descending: false
-                        }
-                    ]
-                }">
-                <headerToolbar>
-                    <Toolbar>
-                        <ToolbarSpacer/>
-                        <Button text="Revoke" type="Reject" press=".onRevokeResouceBtnPress"/>
-                    </Toolbar>
-                </headerToolbar>
-                <columns>
-                    <!-- Phase ID -->
-                    <Column width="8rem">
-                        <Text text="Phase ID" wrapping="true"/>
-                    </Column>
-                    <!-- Component Description -->
-                    <Column width="10rem">
-                        <Text text="Component Description" wrapping="true"/>
-                    </Column>
-                    <!-- Component -->
-                    <Column width="8rem">
-                        <Text text="Component" wrapping="true"/>
-                    </Column>
-                    <!-- Operator -->
-                    <Column width="10rem">
-                        <Text text="Operator" wrapping="true"/>
-                    </Column>
-                    <!-- Target -->
-                    <Column width="6rem">
-                        <Text text="Target" wrapping="true"/>
-                    </Column>
-                    <!-- Upper Tolerance -->
-                    <Column width="8rem">
-                        <Text text="Upper Tolerance" wrapping="true"/>
-                    </Column>
-                    <!-- Lower Tolerance -->
-                    <Column width="8rem">
-                        <Text text="Lower Tolerance" wrapping="true"/>
-                    </Column>
-                    <!-- Upper Mean Guard -->
-                    <Column width="8rem">
-                        <Text text="Upper Mean Guard" wrapping="true"/>
-                    </Column>
-                    <!-- Lower Mean Guard -->
-                    <Column width="8rem">
-                        <Text text="Lower Mean Guard" wrapping="true"/>
-                    </Column>
-                    <!-- Consecutive Failures Threshold -->
-                    <Column width="10rem">
-                        <Text text="Consecutive Failures Threshold" wrapping="true"/>
-                    </Column>
-                    <!-- Cumulative Failures Threshold -->
-                    <Column width="12rem">
-                        <Text text="Cumulative Failures Threshold" wrapping="true"/>
-                    </Column>
-                    <!-- TDO Adjustment Cycle -->
-                    <Column width="10rem">
-                        <Text text="TDO Adjustment Cycle" wrapping="true"/>
-                    </Column>
-                </columns>
-                <items>
-                    <ColumnListItem>
-                        <!-- Non-editable fields -->
-                        <Text text="{viewModel>phaseId}" wrapping="true"/>
-                        <Text text="{viewModel>componentDesc}" wrapping="true"/>
-                        <Text text="{viewModel>component}" wrapping="true"/>
+            <ScrollContainer width="100%" horizontal="true" vertical="true">
+                <Table id="myTable" items="{/tableData}" width="100%" growing="true" growingScrollToLoad="true">
 
-                        <!-- Operator (editable with browse option) -->
-                        <HBox>
-                            <ComboBox
-                                width="8rem"
-                                selectedKey="{viewModel>operator}"
-                                enabled="true"
-                                items="{viewModel>userAssignments}"
-                                change=".onOperatorChange">
-                                <core:Item key="{viewModel>userId}" text="{viewModel>userId}"/>
-                            </ComboBox>
-                        </HBox>
+                    <columns>
+                        <Column width="8rem">
+                            <Text text="Work Center"/>
+                        </Column>
+                        <Column width="8rem">
+                            <Text text="Phase ID"/>
+                        </Column>
+                        <Column width="10rem">
+                            <Text text="Component Description"/>
+                        </Column>
+                        <Column width="8rem">
+                            <Text text="Component"/>
+                        </Column>
+                        <Column width="10rem">
+                            <Text text="Operator"/>
+                        </Column>
+                        <Column width="6rem">
+                            <Text text="Target"/>
+                        </Column>
+                        <Column width="8rem">
+                            <Text text="Upper Tolerance"/>
+                        </Column>
+                        <Column width="8rem">
+                            <Text text="Lower Tolerance"/>
+                        </Column>
+                        <Column width="8rem">
+                            <Text text="Upper Mean Guard"/>
+                        </Column>
+                        <Column width="8rem">
+                            <Text text="Lower Mean Guard"/>
+                        </Column>
+                        <Column width="10rem">
+                            <Text text="Consecutive Failures Threshold"/>
+                        </Column>
+                        <Column width="18rem">
+                            <Text text="Cumulative Failures Threshold"/>
+                        </Column>
+                        <Column width="10rem">
+                            <Text text="TDO Adjustment Cycle"/>
+                        </Column>
+                    </columns>
 
-                        <!-- Editable fields -->
-                        <Input width="5rem" value="{viewModel>target}" change=".onTargetChange"/>
-                        <Input width="6rem" value="{viewModel>upperTolerance}" change=".onUpperToleranceChange"/>
-                        <Input width="6rem" value="{viewModel>lowerTolerance}" change=".onLowerToleranceChange"/>
-                        <Input width="6rem" value="{viewModel>upperMeanGuard}" change=".onUpperMeanGuardChange"/>
-                        <Input width="6rem" value="{viewModel>lowerMeanGuard}" change=".onLowerMeanGuardChange"/>
+                    <items>
+                        <ColumnListItem>
+                            <cells>
+                                <Text text="{workCenter}"/>
+                                <Text text="{phaseId}"/>
+                                <Text text="{componentDescription}"/>
+                                <Text text="{component}"/>
+                                <Text text="{operator}"/>
+                                <Text text="{target}"/>
+                                <Text text="{upperTolerance}"/>
+                                <Text text="{lowerTolerance}"/>
+                                <Text text="{upperMeanGuard}"/>
+                                <Text text="{lowerMeanGuard}"/>
+                                <Text text="{consecutiveFailures}"/>
+                                <HBox>
+                                    <Text text="{target}" class="sapUiSmallMarginEnd"/>
+                                    <Text text="out of" class="sapUiSmallMarginEnd"/>
+                                    <Text text="{lowerTolerance}"/>
+                                </HBox>
+                                <Text text="{tdoCycle}"/>
+                            </cells>
+                        </ColumnListItem>
+                    </items>
+                </Table>
 
-                        <!-- Consecutive Failures Threshold -->
-                        <Input 
-                            width="6rem"
-                            value="{
-                                path: 'viewModel>consecutiveFailuresThreshold',
-                                type: 'sap.ui.model.type.Integer',
-                                constraints: {
-                                    minimum: 0
-                                }
-                            }"
-                            valueStateText="Value must be a positive integer"
-                            placeholder="3"
-                            change=".onConsecutiveFailuresThresholdChange"/>
-
-                        <!-- Cumulative Failures Threshold -->
-                        <HBox>
-                            <Input 
-                                width="4rem"
-                                value="{
-                                    path: 'viewModel>cumulativeFailuresThresholdCurrent',
-                                    type: 'sap.ui.model.type.Integer',
-                                    constraints: {
-                                        minimum: 0
-                                    }
-                                }"
-                                placeholder="10"
-                                change=".onCumulativeFailuresThresholdCurrentChange"/>
-                            <Text text="Out of" class="sapUiSmallMarginBeginEnd" wrapping="true"/>
-                            <Input 
-                                width="4rem"
-                                value="{
-                                    path: 'viewModel>cumulativeFailuresThresholdTotal',
-                                    type: 'sap.ui.model.type.Integer',
-                                    constraints: {
-                                        minimum: 0
-                                    }
-                                }"
-                                placeholder="50"
-                                change=".onCumulativeFailuresThresholdTotalChange"/>
-                        </HBox>
-
-                        <!-- TDO Adjustment Cycle -->
-                        <Input width="6rem" value="{viewModel>tdoAdjustmentCycle}" change=".onTDOAdjustmentCycleChange"/>
-                    </ColumnListItem>
-                </items>
-            </Table>
+            </ScrollContainer>
         </f:content>
         <f:footer>
-          <Toolbar id="idMassOpAsmtFooter" visible="{viewModel>/isFiltersApplied}">
-           <ToolbarSpacer />
-           <Button text="Assign" type="Emphasized" press=".onSaveAssignmentsPress"/>
-           <ToolbarSpacer width="10px"/>
-           <Button text="Cancel" type="Reject" press=".onCancelAssignmentsPress"/>
-          </Toolbar>
+            <Toolbar id="idMassOpAsmtFooter" visible="{viewModel>/isFiltersApplied}">
+                <ToolbarSpacer />
+                <Button text="Assign" type="Emphasized" press=".onSaveAssignmentsPress"/>
+                <ToolbarSpacer width="10px"/>
+                <Button text="Cancel" type="Reject" press=".onCancelAssignmentsPress"/>
+            </Toolbar>
         </f:footer>
     </f:DynamicPage>
 </mvc:View>
