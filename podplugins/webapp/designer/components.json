@@ -9,6 +9,18 @@
       "i18n": "rose.ext.podplugins.TdoAdminScreen.i18n.i18n",
       "productionProcessEnabled": false,
       "supportedPodTypes": ["WORK_CENTER", "OPERATION", "ORDER", "OTHER", "MONITOR"]
+    },
+    
+    {
+      "id": "stelliumPackingPlugin_2",
+      "type": "VIEW_PLUGIN",
+      "allowMultipleInstances": false,
+      "name": "rose.ext.podplugins.historicalPluginnew",
+      "propertyEditor": "rose.ext.podplugins.historicalPluginnew.builder.PropertyEditor",
+      "i18n": "rose.ext.podplugins.historicalPluginnew.i18n.i18n",
+      "productionProcessEnabled": false,
+      "supportedPodTypes": ["WORK_CENTER", "OPERATION", "ORDER", "OTHER", "MONITOR"]
     }
   ]
+  
 }

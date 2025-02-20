@@ -68,11 +68,27 @@
                                 </ComboBox>
                             </filterbar:control>
                         </filterbar:FilterGroupItem>
+                        <filterbar:FilterGroupItem id="idMaterialDesc"
+                            name="MaterialDesc"
+                            label="Material Description"
+                            groupName="Group1"
+                            mandatory="false"
+                            visibleInFilterBar="true">
+                            <filterbar:control>
+                                <Input 
+                                    id="idMaterialDescInput" 
+                                    value="{viewModel>/materialDescription}"
+                                    enabled="false"
+                                    width="12rem"/>
+                            </filterbar:control>
+                        </filterbar:FilterGroupItem>   
                     </filterbar:filterGroupItems>
                 </filterbar:FilterBar>
             </f:DynamicPageHeader>
         </f:header>
         <f:content>
+        <ScrollContainer  width="100%" horizontal="true" >
+ 
             <Table id="idMassOpAsmtTable" 
                 mode="MultiSelect"
                 selectionChange=".onTableItemsSelectionChange"
@@ -221,6 +237,7 @@
                     </ColumnListItem>
                 </items>
             </Table>
+            </ScrollContainer>
         </f:content>
         <f:footer>
           <Toolbar id="idMassOpAsmtFooter" visible="{viewModel>/isFiltersApplied}">

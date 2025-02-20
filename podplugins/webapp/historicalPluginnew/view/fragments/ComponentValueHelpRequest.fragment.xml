@@ -1,0 +1,39 @@
+<core:FragmentDefinition
+    xmlns:vh="sap.ui.comp.valuehelpdialog"
+    xmlns:smartFilterBar="sap.ui.comp.smartfilterbar"
+    xmlns:fb="sap.ui.comp.filterbar"
+    xmlns="sap.m"
+    xmlns:core="sap.ui.core">
+    
+    <vh:ValueHelpDialog 
+        id="idComponentVHDia"
+        key="HEADER_COMPONENT"
+        title="Component"
+        supportRanges="false"
+        supportMultiselect="false"
+        ok=".onComponentVHDiaOKPress"
+        cancel=".onComponentVHDiaCancelPress">
+        
+        <vh:filterBar>
+            <fb:FilterBar id="idComponentVHDiaFB" search="onComponentVHDiaSearch">
+                <fb:filterGroupItems>
+                    <fb:FilterGroupItem 
+                        id="idComponentVHDiaFB-componentFGI" 
+                        groupName="group1" 
+                        visibleInFilterBar="true" 
+                        name="description" 
+                        label="Component Description">
+                        
+                        <fb:control>
+                            <Input 
+                                id="idComponentVHDiaFB-componentFGI-Input" 
+                                placeholder="Search by Component or Description..."/>
+                        </fb:control>
+                        
+                    </fb:FilterGroupItem>
+                </fb:filterGroupItems>
+            </fb:FilterBar>
+        </vh:filterBar>
+        
+    </vh:ValueHelpDialog>
+</core:FragmentDefinition>
