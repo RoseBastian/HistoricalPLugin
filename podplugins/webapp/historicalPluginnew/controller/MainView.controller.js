@@ -9,6 +9,7 @@ sap.ui.define([
     'sap/ui/model/FilterOperator',
     'sap/ui/comp/smartvariants/PersonalizableInfo',
     "sap/ui/core/Fragment",
+    "sap/ui/model/Sorter",
     "sap/ui/core/Control",
     "sap/ui/table/Column",
     "sap/m/MessageToast",
@@ -21,7 +22,7 @@ sap.ui.define([
 
 
 
-], function (jQuery, PluginViewController, JSONModel, ColumnListItem, Text, Label, Filter, FilterOperator, PersonalizableInfo, Fragment, Control, Column, MessageToast, MessageBox, Spreadsheet, TablePersoController) {
+], function (jQuery, PluginViewController, JSONModel, ColumnListItem, Text, Label, Filter, FilterOperator, PersonalizableInfo, Fragment, Sorter, Control, Column, MessageToast, MessageBox, Spreadsheet, TablePersoController) {
     "use strict";
 
     return PluginViewController.extend("rose.ext.podplugins.historicalPluginnew.controller.MainView", {
@@ -39,8 +40,14 @@ sap.ui.define([
                 tabItems: [], // Initialize with an empty array to ensure no data is displayed
                 material: "",
                 materials: [],
+                component: "",
+                components: [],
                 controls: {
                     materialInput: {
+                        valueState: "None",
+                        valueStateText: ""
+                    },
+                    componentInput: {
                         valueState: "None",
                         valueStateText: ""
                     }
@@ -89,7 +96,7 @@ sap.ui.define([
             // this._fetchResourceData();
             // this._fetchOrderData();
             // this._fetchworkCenterData();
-            this._initializeData();
+            
 
 
 
@@ -157,7 +164,7 @@ sap.ui.define([
             if (isNaN(oDate.getTime())) return sDate;
 
             var oDateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({
-                pattern: "yyyy-MM-dd HH:mm:ss"
+                pattern: "dd-MM-yyyy HH:mm:ss"
             });
 
             return oDateFormat.format(oDate); // Trims milliseconds
@@ -167,9 +174,9 @@ sap.ui.define([
         formatDateTime: function (oDate, sTime) {
             if (!oDate) return "";
 
-            // Ensure date is formatted as "yyyy-MM-dd"
+            // Ensure date is formatted as "dd-MM-yyyy"
             var oDateFormat = sap.ui.core.format.DateFormat.getDateTimeInstance({
-                pattern: "yyyy-MM-dd"
+                pattern: "dd-MM-yyyy"
             });
             var sFormattedDate = oDateFormat.format(oDate);
 
@@ -190,6 +197,155 @@ sap.ui.define([
             }
         },
 
+        onSortAll: function () {
+            if (!this._oSortDialog) {
+                var oList = new sap.m.List({
+                    mode: "SingleSelectMaster",
+                    items: {
+                        path: "/",
+                        template: new sap.m.StandardListItem({
+                            title: "{label}",
+                            type: "Active"
+                        })
+                    }
+                });
+        
+                var oModel = new sap.ui.model.json.JSONModel([
+                    { label: 'Plant', property: 'PLANT' },
+                    { label: 'Work Center', property: 'WORKCENTER' },
+                    { label: 'Work Center Description', property: 'WORKCENTER_DESCRIPTION' },
+                    { label: 'Operator', property: 'OPERATOR' },
+                    { label: 'Order', property: 'ORDER_NO' },
+                    { label: 'Order Status', property: 'ORDER_STATUS' },
+                    { label: 'Batch', property: 'BATCH_NUMBER' },
+                    { label: 'Scale', property: 'RESOURCE' },
+                    { label: 'Material Details', property: 'HEADER_MATERIAL' },
+                    { label: 'Component Details', property: 'COMPONENT' },
+                    { label: 'Target', property: 'TARGET_IN_KG' },
+                    { label: 'Upper Tolerance', property: 'UPPER_TOL_IN_KG' },
+                    { label: 'Lower Tolerance', property: 'LOWER_TOL_IN_KG' },
+                    { label: 'Actual Weight', property: 'QTY_IN_KG' },
+                    { label: 'UOM', property: 'KG' },
+                    { label: 'Consumption Date', property: 'CONSUMPTION_DATE' },
+                    { label: 'Consumption Time', property: 'CONSUMPTION_DATE' }
+                ]);
+        
+                oList.setModel(oModel);
+        
+                var oAscendingButton = new sap.m.Button({
+                    text: "Ascending",
+                    press: function () {
+                        var oSelectedItem = oList.getSelectedItem();
+                        if (oSelectedItem) {
+                            var sSortProperty = oSelectedItem.getBindingContext().getProperty("property");
+                            this._applySorting(sSortProperty, false); // Ascending order
+                        }
+                        this._oSortDialog.close();
+                    }.bind(this)
+                });
+        
+                var oDescendingButton = new sap.m.Button({
+                    text: "Descending",
+                    press: function () {
+                        var oSelectedItem = oList.getSelectedItem();
+                        if (oSelectedItem) {
+                            var sSortProperty = oSelectedItem.getBindingContext().getProperty("property");
+                            this._applySorting(sSortProperty, true); // Descending order
+                        }
+                        this._oSortDialog.close();
+                    }.bind(this)
+                });
+        
+                this._oSortDialog = new sap.m.Dialog({
+                    title: "Sort Table",
+                    content: [oList],
+                    beginButton: oAscendingButton,
+                    endButton: oDescendingButton,
+                    afterClose: function () {
+                        this._oSortDialog.destroy();
+                        this._oSortDialog = null;
+                    }.bind(this)
+                });
+        
+                this.getView().addDependent(this._oSortDialog);
+            }
+        
+            this._oSortDialog.open();
+        },
+        
+        /**
+         * Applies sorting based on the selected column and sorting order
+         */
+        _applySorting: function (sSortProperty, bDescending) {
+            var oSorter = new sap.ui.model.Sorter(sSortProperty, bDescending);
+            var oTable = this.byId("table");
+            var oBinding = oTable.getBinding("items");
+        
+            if (oBinding) {
+                oBinding.sort(oSorter);
+                var sOrderText = bDescending ? "Descending" : "Ascending";
+                sap.m.MessageToast.show("Sorted by " + sSortProperty + " (" + sOrderText + ")");
+            }
+        },                  
+        onSort: function (oEvent) {
+            var oColumn = oEvent.getParameter("sortColumn"); // Get the sorted column
+            var sSortProperty = oColumn.getSortProperty(); // Get the sort property
+            var bDescending = oEvent.getParameter("sortDescending"); // Check if sorting is descending
+
+            // Create a sorter
+            var oSorter = new Sorter(sSortProperty, bDescending);
+
+            // Apply the sorter to the table binding
+            var oTable = this.byId("table");
+            var oBinding = oTable.getBinding("items");
+            oBinding.sort(oSorter);
+
+            MessageToast.show("Sorted by " + sSortProperty + " in " + (bDescending ? "descending" : "ascending") + " order");
+        },
+
+        onClearSorting: function () {
+            var oTable = this.byId("table");
+            var oBinding = oTable.getBinding("items");
+            oBinding.sort([]); // Clear sorting
+            MessageToast.show("Sorting cleared");
+        },
+
+        _getSortProperty: function (oColumn) {
+            // Implement logic to get sort property from column ID or other attribute
+            // Example:
+            switch (oColumn.getId()) {
+                case "plantColumn": return "PLANT";
+                case "workCenterColumn": return "WORKCENTER";
+                // Add cases for all columns
+                default: return "";
+            }
+        },
+        onTableSearch: function (oEvent) {
+            const sQuery = oEvent.getSource().getValue();
+            const oTable = this.byId("table");
+            const aFilters = [];
+
+            if (sQuery) {
+                aFilters.push(new Filter({
+                    filters: [
+                        new Filter("PLANT", FilterOperator.Contains, sQuery),
+                        new Filter("WORKCENTER", FilterOperator.Contains, sQuery),
+                        // Add all searchable properties
+                        new Filter("WORKCENTER_DESCRIPTION", FilterOperator.Contains, sQuery),
+                        new Filter("PLANT_DESCRIPTION", FilterOperator.Contains, sQuery),
+                        new Filter("BATCH_NUMBER", FilterOperator.Contains, sQuery),
+                        new Filter("COMPONENT", FilterOperator.Contains, sQuery),
+                        new Filter("COMPONENT_DESCRIPTION", FilterOperator.Contains, sQuery),
+                        new Filter("HEADER_MATERIAL", FilterOperator.Contains, sQuery),
+                        new Filter("HEADER_MATERIAL_DESCRIPTION", FilterOperator.Contains, sQuery)
+                    ],
+                    and: false // OR between properties
+                }));
+            }
+
+            oTable.getBinding("items").filter(aFilters);
+        },
+
 
         onSearch: function () {
             var oView = this.getView(),
@@ -202,6 +358,8 @@ sap.ui.define([
             var sworkCenter = oViewModel.getProperty("/workCenter");
             var suserId = oViewModel.getProperty("/userId");
             var sMaterial = oViewModel.getProperty("/material");
+           
+
 
             if (sOrder) {
                 aFilters.push(new sap.ui.model.Filter("ORDER_NO", sap.ui.model.FilterOperator.EQ, sOrder));
@@ -218,6 +376,7 @@ sap.ui.define([
             if (sMaterial) {
                 aFilters.push(new sap.ui.model.Filter("HEADER_MATERIAL", sap.ui.model.FilterOperator.EQ, sMaterial));
             }
+            
 
             // Start Date & Time
             var oStartDate = oView.byId("idStartDatePicker").getDateValue();
@@ -304,7 +463,7 @@ sap.ui.define([
         },
 
         /**
-         * Formats the date and time to a string in "yyyy-MM-dd HH:mm:ss" format.
+         * Formats the date and time to a string in "dd-MM-yyyy HH:mm:ss" format.
          * @param {object} oDate - The Date object to format.
          * @param {string} sTime - The time string to append.
          * @returns {string} - The formatted date-time string.
@@ -392,7 +551,7 @@ sap.ui.define([
             var oDate = new Date(sDate);
             if (isNaN(oDate.getTime())) return sDate;
             var oDateFormat = sap.ui.core.format.DateFormat.getDateInstance({
-                pattern: "yyyy-MM-dd"
+                pattern: "dd-MM-yyyy"
             });
             return oDateFormat.format(oDate);
         },
@@ -422,6 +581,9 @@ sap.ui.define([
         //     var oModel = this.getView().getModel("data");
         //     oModel.setProperty("/orders", oResponseData.content);
         // },
+
+
+
         _fetchMaterialData: function () {
             var sUrl = this.getPublicApiRestDataSourceUri() + '/material/v2/materials';
             var oParameters = {
@@ -896,6 +1058,7 @@ sap.ui.define([
             oViewModel.setProperty("/isOperatorEnabled", false);
         },
 
+
         onMaterialValueHelpRequest: function () {
             var oView = this.getView(),
                 oViewModel = oView.getModel("data");
@@ -931,6 +1094,19 @@ sap.ui.define([
             }
             this.oMaterialVHDia.open();
         },
+       
+
+        onMaterialInputChange: function (oEvent) {
+            var oInput = oEvent.getSource();
+            var sValue = oInput.getValue();
+        
+            if (!sValue) {
+                oInput.setValueState("Error");
+                oInput.setValueStateText("Material is required.");
+            } else {
+                oInput.setValueState("None");
+            }
+        },
 
         onMaterialVHDiaSearch: function (oEvent) {
             const oFilterBar = oEvent.getSource();
@@ -943,7 +1119,7 @@ sap.ui.define([
                 if (oControl && oControl.getValue) {
                     const sValue = oControl.getValue().trim();
                     if (sValue) {
-                        // Add both filters for 'HEADER_MATERIAL' and 'HEADER_MATERIAL_DESCRIPTION' using OR
+                        // Add both filters for 'material' and 'description' using OR
                         const oMaterialFilter = new Filter("material", FilterOperator.Contains, sValue);
                         const oDescriptionFilter = new Filter("description", FilterOperator.Contains, sValue);
                         aFilters.push(new Filter({
@@ -964,7 +1140,6 @@ sap.ui.define([
                 });
             }
         },
-
         onMaterialVHDiaOKPress: function (oEvent) {
             var aSelectedItems = oEvent.getParameter("tokens");
 
@@ -982,6 +1157,48 @@ sap.ui.define([
             // Set the selected Material in the model
             var oViewModel = this.getView().getModel("data");
             oViewModel.setProperty("/material", sSelectedMaterial);
+
+            // Update the material filter bar
+            var oMaterialInput = this.getView().byId("IdMaterialInput");
+            if (oMaterialInput) {
+                oMaterialInput.setValue(sSelectedMaterial);
+            }
+        },
+
+        onMaterialValueHelpRequest: function () {
+            var oView = this.getView(),
+                oViewModel = oView.getModel("data");
+
+            if (!this.oMaterialVHDia) {
+                // Load the fragment
+                this.oMaterialVHDia = sap.ui.xmlfragment(
+                    "rose.ext.podplugins.historicalPluginnew.view.fragments.materialValueHelpRequest",
+                    this
+                );
+
+                this.oMaterialVHDia.getTableAsync().then(function (oTable) {
+                    // Add columns to the table
+                    oTable.addColumn(
+                        new Column({
+                            label: new Text({ text: "Material" }),
+                            template: new Text({ text: "{data>material}" }),
+                            width: "170px"
+                        })
+                    );
+                    oTable.addColumn(
+                        new Column({
+                            label: new Text({ text: "Description" }),
+                            template: new Text({ text: "{data>description}" }),
+                            width: "170px"
+                        })
+                    );
+
+                    // Bind data to the table
+                    oTable.setModel(oViewModel, "data");
+                    oTable.bindRows("data>/materials"); // This matches the model path
+                }.bind(this)); // Add binding to maintain context
+            }
+            this.oMaterialVHDia.open();
         },
 
         onMaterialVHDiaCancelPress: function () {
@@ -1168,7 +1385,7 @@ sap.ui.define([
                     formatter: function (sDate) {
                         if (!sDate) return "";
                         var oDate = new Date(sDate);
-                        return sap.ui.core.format.DateFormat.getDateInstance({ pattern: "yyyy-MM-dd" }).format(oDate);
+                        return sap.ui.core.format.DateFormat.getDateInstance({ pattern: "dd-MM-yyyy" }).format(oDate);
                     }
                 },
                 // Apply the formatTime function to Consumption Time
@@ -1285,6 +1502,7 @@ sap.ui.define([
         },
 
         onBeforeRenderingPlugin: function () {
+            this._initializeData();
 
 
 

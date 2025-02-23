@@ -7,7 +7,8 @@
     
     <vh:ValueHelpDialog 
         id="idMaterialVHDia"
-        key="HEADER_MATERIAL"
+        key="material"
+        descriptionKey="description"
         title="Material"
         supportRanges="false"
         supportMultiselect="false"
@@ -15,10 +16,24 @@
         cancel=".onMaterialVHDiaCancelPress">
         
         <vh:filterBar>
-            <fb:FilterBar id="idMaterialVHDiaFB" search="onMaterialVHDiaSearch">
+            <fb:FilterBar id="idMaterialVHDiaFB" search=".onMaterialVHDiaSearch">
                 <fb:filterGroupItems>
                     <fb:FilterGroupItem 
                         id="idMaterialVHDiaFB-materialFGI" 
+                        groupName="group1" 
+                        visibleInFilterBar="true" 
+                        name="material" 
+                        label="Material">
+                        
+                        <fb:control>
+                            <Input 
+                                id="idMaterialVHDiaFB-materialFGI-Input" 
+                                placeholder="Search by Material..."/>
+                        </fb:control>
+                        
+                    </fb:FilterGroupItem>
+                    <fb:FilterGroupItem 
+                        id="idMaterialVHDiaFB-descriptionFGI" 
                         groupName="group1" 
                         visibleInFilterBar="true" 
                         name="description" 
@@ -26,8 +41,8 @@
                         
                         <fb:control>
                             <Input 
-                                id="idMaterialVHDiaFB-materialFGI-Input" 
-                                placeholder="Search by Material or Description..."/>
+                                id="idMaterialVHDiaFB-descriptionFGI-Input" 
+                                placeholder="Search by Description..."/>
                         </fb:control>
                         
                     </fb:FilterGroupItem>
