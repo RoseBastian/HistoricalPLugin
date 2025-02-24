@@ -1,0 +1,57 @@
+<core:FragmentDefinition xmlns="sap.m" xmlns:core="sap.ui.core" xmlns:fb="sap.ui.comp.filterbar"
+	xmlns:l="sap.ui.layout">
+	<Dialog id="matVhDialog" title="Material" afterClose="onClose" contentHeight="2000px">
+		<dependents>
+			<SearchField id="matVh-searchField" showSearchButton="false" liveChange="onMatVhSearchLiveChange" maxLength="200" />
+		</dependents>
+		<content>
+			<fb:FilterBar 
+                id="materialVhDiaFB"
+                showGoOnFB="false"
+                showClearOnFB="true"
+                showFilterConfiguration="false"
+				filterBarExpanded="false"
+                filterContainerWidth="225px"
+                clear="onFilterBarClear"
+				basicSearch="matVh-searchField">
+				<fb:filterGroupItems>
+					<fb:FilterGroupItem groupName="basic" name="material" label="Material"
+						visibleInFilterBar="true">
+						<fb:control>
+							<Input id="materialFilter" change="onMatVhDiaFilterBarChange" class="mesUpperCaseTransform"
+								maxLength="200" />
+						</fb:control>
+					</fb:FilterGroupItem>
+				</fb:filterGroupItems>
+			</fb:FilterBar>
+			<Table id="matVhDiaTable"
+				items="{ path: 'product>/Materials', parameters: { $select: ['ref','material','version','description','status','materialType','procurementType','lotSize','currentVersion','mrpController'] } }"
+				mode="SingleSelectMaster" selectionChange="onSelect" growing="true" growingThreshold="20"
+				growingScrollToLoad="true">
+				<columns>
+					<Column width="13em">
+						<Text text="Material" />
+					</Column>
+					<Column width="5em" minScreenWidth="Tablet" demandPopin="true">
+						<Text text="Version" />
+					</Column>
+					<Column minScreenWidth="Desktop" demandPopin="true">
+						<Text text="Description" />
+					</Column>
+				</columns>
+				<items>
+					<ColumnListItem>
+						<cells>
+							<Text text="{product>material}" />
+							<Text text="{product>version}" />
+							<Text text="{product>description}" />
+						</cells>
+					</ColumnListItem>
+				</items>
+			</Table>
+		</content>
+		<beginButton>
+			<Button id="closeButton" text="Cancel" tooltip="Cancel" press="onMaterialVhDiaCancel" />
+		</beginButton>
+	</Dialog>
+</core:FragmentDefinition>
