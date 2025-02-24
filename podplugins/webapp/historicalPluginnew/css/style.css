@@ -1,1 +1,24 @@
 /* Enter your custom styles here */
+.ColumnHeader{
+    text-align: center;
+}
+
+.fixed-toolbar-container {
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: white;
+}
+
+.fixed-toolbar {
+    width: 100%;
+    position: sticky;
+    top: 0;
+    z-index: 1000;
+    background: white;
+    border-bottom: 1px solid #ddd; /* Optional: Adds a separation line */
+}
+
+#table {
+    overflow-x: auto; /* Enable horizontal scrolling */
+}

@@ -337,7 +337,8 @@ sap.ui.define([
                         new Filter("COMPONENT", FilterOperator.Contains, sQuery),
                         new Filter("COMPONENT_DESCRIPTION", FilterOperator.Contains, sQuery),
                         new Filter("HEADER_MATERIAL", FilterOperator.Contains, sQuery),
-                        new Filter("HEADER_MATERIAL_DESCRIPTION", FilterOperator.Contains, sQuery)
+                        new Filter("HEADER_MATERIAL_DESCRIPTION", FilterOperator.Contains, sQuery),
+                        new Filter("OPERATOR", FilterOperator.Contains, sQuery)
                     ],
                     and: false // OR between properties
                 }));
@@ -585,12 +586,17 @@ sap.ui.define([
 
 
         _fetchMaterialData: function () {
+            var oProdModel = new sap.ui.model.odata.v4.ODataModel({
+                serviceUrl: this.getPodController().getProductDataSourceUri(),
+                groupId: '$direct'
+            })
+            console.log(oProdModel)
             var sUrl = this.getPublicApiRestDataSourceUri() + '/material/v2/materials';
             var oParameters = {
-                plant: 'M206',
-                page: "1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30",
-                size: "1000"
-            };
+                plant: 'M206', //Plant number
+                page: "1", //The page you are requesting
+                size: "2000" //Size of the page
+               };
             this.ajaxGetRequest(sUrl, oParameters, (oResponseData) => {
                 this.handleResponseMaterial(oResponseData);
             }, this.handleErrorMessage);
@@ -1075,21 +1081,21 @@ sap.ui.define([
                     oTable.addColumn(
                         new Column({
                             label: new Text({ text: "Material" }),
-                            template: new Text({ text: "{data>material}" }),
+                            template: new Text({ text: "{product>material}" }),
                             width: "170px"
                         })
                     );
                     oTable.addColumn(
                         new Column({
                             label: new Text({ text: "Description" }),
-                            template: new Text({ text: "{data>description}" }),
+                            template: new Text({ text: "{product>description}" }),
                             width: "170px"
                         })
                     );
 
                     // Bind data to the table
-                    oTable.setModel(oViewModel, "data");
-                    oTable.bindRows("data>/materials"); // This matches the model path
+                    // oTable.setModel(oViewModel, "data");
+                    oTable.bindRows("product>/Materials"); // This matches the model path
                 }.bind(this)); // Add binding to maintain context
             }
             this.oMaterialVHDia.open();
@@ -1165,41 +1171,7 @@ sap.ui.define([
             }
         },
 
-        onMaterialValueHelpRequest: function () {
-            var oView = this.getView(),
-                oViewModel = oView.getModel("data");
-
-            if (!this.oMaterialVHDia) {
-                // Load the fragment
-                this.oMaterialVHDia = sap.ui.xmlfragment(
-                    "rose.ext.podplugins.historicalPluginnew.view.fragments.materialValueHelpRequest",
-                    this
-                );
-
-                this.oMaterialVHDia.getTableAsync().then(function (oTable) {
-                    // Add columns to the table
-                    oTable.addColumn(
-                        new Column({
-                            label: new Text({ text: "Material" }),
-                            template: new Text({ text: "{data>material}" }),
-                            width: "170px"
-                        })
-                    );
-                    oTable.addColumn(
-                        new Column({
-                            label: new Text({ text: "Description" }),
-                            template: new Text({ text: "{data>description}" }),
-                            width: "170px"
-                        })
-                    );
-
-                    // Bind data to the table
-                    oTable.setModel(oViewModel, "data");
-                    oTable.bindRows("data>/materials"); // This matches the model path
-                }.bind(this)); // Add binding to maintain context
-            }
-            this.oMaterialVHDia.open();
-        },
+       
 
         onMaterialVHDiaCancelPress: function () {
             var oViewModel = this.getView().getModel("data");

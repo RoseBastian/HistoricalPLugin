@@ -200,7 +200,7 @@
                 </f:content>
             </f:DynamicPageHeader>
         </f:header>
-
+  
         <f:content>
             <!-- <ScrollContainer id="_IDGenScrollContainer"
         		 width="100%"
@@ -208,6 +208,21 @@
             height="auto"
             focusable="true"
             > -->
+             <VBox >
+                <Toolbar class="fixed-toolbar">
+                    <SearchField id="searchField" placeholder="Search..." liveChange=".onTableSearch" width="20rem"/>
+                    <ToolbarSpacer />
+                    <Button id="exportButton" icon="sap-icon://excel-attachment" press=".onExportToExcel"/>
+                    <Button id="clearButton" text="Clear" icon="sap-icon://clear-filter" press="onClearFilters"/>
+                    <Button id="personalizeTableButton" icon="sap-icon://settings" press=".onOpenTablePersonalization"/>
+                    <Button icon="sap-icon://sort" tooltip="Sort" press=".onSortAll"/>
+                    <Button icon="sap-icon://decline" tooltip="Clear Sorting" press=".onClearSorting"/>
+                </Toolbar>
+           
+            
+            <ScrollContainer height="400px" focusable="true"  width="100%" horizontal="true" vertical="true">
+         
+            
             <Table
                 id="table"
                 growing="false"
@@ -218,64 +233,64 @@
                 ariaLabelledBy="tableHeader"
                 items="{path: 'data>/items'}"
                 sort=".onSort"
-            >
-                <!-- Add the Toolbar in the headerToolbar aggregation -->
-                <headerToolbar>
-                    <Toolbar>
-                        <SearchField
-                            id="searchField"
-                            placeholder="Search..."
-                            liveChange=".onTableSearch"
-                            width="20rem"
-                        />
-                        <ToolbarSpacer />
-                        <Button
-                            id="exportButton"
-                            icon="sap-icon://excel-attachment"
-                            press=".onExportToExcel"
-                        />
-                        <!-- <Button id="PDFButton" icon="sap-icon://pdf-attachment" press="onExportToPDF"/> -->
-                        <!-- <Button id="adaptFiltersButton" text="Adapt Filters" icon="sap-icon://filter" press=".onOpenAdaptFilters"/> -->
-                        <Button
-                            id="clearButton"
-                            text="Clear"
-                            icon="sap-icon://clear-filter"
-                            press="onClearFilters"
-                        />
-                        <Button
-                            id="personalizeTableButton"
-                            icon="sap-icon://settings"
-                            press=".onOpenTablePersonalization"
-                        />
-                        <Button
-                            icon="sap-icon://sort"
-                            tooltip="Sort"
-                            press=".onSortAll"
-                        />
-                        <Button
-                            icon="sap-icon://decline"
-                            tooltip="Clear Sorting"
-                            press=".onClearSorting"
-                        />
-                    </Toolbar>
-                </headerToolbar>
 
-                <columns>
+            >
+            
+              
+                <columns >
                     <Column
                         id="plantColumn"
                         minScreenWidth="Tablet"
                         demandPopin="true"
                         visible="{data>/columns/PLANT}"
+                        hAlign="Center"
+                        width="80px"
                     >
-                        <Text text="Plant" />
+                        <Text text="Plant"  />
                     </Column>
+
+                    <Column
+                        id="_IDGenColumn2ia"
+                        minScreenWidth="Tablet"
+                        demandPopin="true"
+                        visible="{data>/columns/HEADER_MATERIAL}"
+                        hAlign="Center"
+                        width="160px"
+                    >
+                        <Text text="Material"  />
+                    </Column>
+
+                    <Column
+                        id="_IDGenColumn2i"
+                        minScreenWidth="Tablet"
+                        demandPopin="true"
+                        visible="{data>/columns/ORDER_NO}"
+                         hAlign="Center"
+                         width="160px"
+                    >
+                        <Text text="Order"  />
+                    </Column>
+
+                    <Column
+                        id="_IDGenColumn2ih"
+                        minScreenWidth="Tablet"
+                        demandPopin="true"
+                        visible="{data>/columns/ORDER_STATUS}"
+                         hAlign="Center"
+                         width="140px"
+                    >
+                        <Text text="Order Status" />
+                    </Column>
+
 
                     <Column
                         id="_IDGenColumn1"
                         minScreenWidth="Tablet"
                         demandPopin="true"
                         visible="{data>/columns/WORKCENTER}"
-                        sortProperty="WORKCENTER"
+                         hAlign="Center"
+                         width="160px"
+                        
                     >
                         <Text text="Work Center" />
                     </Column>
@@ -285,80 +300,57 @@
                         minScreenWidth="Tablet"
                         demandPopin="true"
                         visible="{data>/columns/WORKCENTER_DESCRIPTION}"
+                         hAlign="Center"
+                         width="160px"
                     >
                         <Text text="Work Center Description" />
                     </Column>
 
-                    <Column
-                        id="_IDGenColumn29i"
+                     <Column
+                        id="_IDGenColumn2i7"
                         minScreenWidth="Tablet"
                         demandPopin="true"
-                        visible="{data>/columns/OPERATOR}"
+                        visible="{data>/columns/RESOURCE}"
+                        hAlign="Center"
+                        width="140px"
                     >
-                        <Text text="Operator" />
+                        <Text text="Scale"  />
                     </Column>
 
-                    <Column
-                        id="_IDGenColumn2ih"
+                     <Column
+                        id="_IDGenColumn2"
                         minScreenWidth="Tablet"
                         demandPopin="true"
-                        visible="{data>/columns/ORDER_STATUS}"
+                        visible="{data>/columns/COMPONENT}"
+                        hAlign="Center"
+                         width="180px"
                     >
-                        <Text text="Order Status" />
+                        <Text text="Component" />
                     </Column>
 
-                    <Column
-                        id="_IDGenColumn2i"
-                        minScreenWidth="Tablet"
-                        demandPopin="true"
-                        visible="{data>/columns/ORDER_NO}"
-                    >
-                        <Text text="Order" />
-                    </Column>
 
                     <Column
                         id="_IDGenColumn2i8"
                         minScreenWidth="Tablet"
                         demandPopin="true"
                         visible="{data>/columns/ORDER_STATUS}"
+                        hAlign="Center"
+                         width="100px"
                     >
-                        <Text text="Batch" />
+                        <Text text="Batch"  />
                     </Column>
 
-                    <Column
-                        id="_IDGenColumn2i7"
-                        minScreenWidth="Tablet"
-                        demandPopin="true"
-                        visible="{data>/columns/RESOURCE}"
-                    >
-                        <Text text="Scale" />
-                    </Column>
+
 
                     <Column
-                        id="_IDGenColumn2ia"
+                        id="_IDGenColumn29i"
                         minScreenWidth="Tablet"
                         demandPopin="true"
-                        visible="{data>/columns/HEADER_MATERIAL}"
+                        visible="{data>/columns/OPERATOR}"
+                        hAlign="Center"
+                         width="180px"
                     >
-                        <Text text="Material Details" />
-                    </Column>
-
-                    <Column
-                        id="_IDGenColumn2"
-                        minScreenWidth="Tablet"
-                        demandPopin="true"
-                        visible="{data>/columns/COMPONENT}"
-                    >
-                        <Text text="Component Details" />
-                    </Column>
-
-                    <Column
-                        id="_IDGenColumn4"
-                        minScreenWidth="Tablet"
-                        demandPopin="true"
-                        visible="{data>/columns/TARGET_IN_KG}"
-                    >
-                        <Text text="Target" />
+                        <Text text="Operator" />
                     </Column>
 
                     <Column
@@ -366,17 +358,35 @@
                         minScreenWidth="Tablet"
                         demandPopin="true"
                         visible="{data>/columns/UPPER_TOL_IN_KG}"
+                        hAlign="Center"
+                         width="100px"
                     >
-                        <Text text="Optimized T+" />
+                        <Text text="Optimized T+"  />
                     </Column>
+
+                   
+                    <Column
+                        id="_IDGenColumn4"
+                        minScreenWidth="Tablet"
+                        demandPopin="true"
+                        visible="{data>/columns/TARGET_IN_KG}"
+                        hAlign="Center"
+                         width="100px"
+                    >
+                        <Text text="Target" />
+                    </Column>
+
+                    
 
                     <Column
                         id="_IDGenColumn30"
                         minScreenWidth="Tablet"
                         demandPopin="true"
                         visible="{data>/columns/LOWER_TOL_IN_KG}"
+                        hAlign="Center"
+                         width="100px"
                     >
-                        <Text text="Optimized T-" />
+                        <Text text="Optimized T-"  />
                     </Column>
 
                     <Column
@@ -384,6 +394,8 @@
                         minScreenWidth="Tablet"
                         demandPopin="true"
                         visible="{data>/columns/QTY_IN_KG}"
+                        hAlign="Center"
+                         width="100px"
                     >
                         <Text text="Actual Weight" />
                     </Column>
@@ -393,6 +405,8 @@
                         minScreenWidth="Tablet"
                         demandPopin="true"
                         visible="{data>/columns/UNIT_OF_MEASURE}"
+                        hAlign="Center"
+                         width="80px"
                     >
                         <Text text="UOM" />
                     </Column>
@@ -402,8 +416,10 @@
                         minScreenWidth="Tablet"
                         demandPopin="true"
                         visible="{data>/columns/CONSUMPTION_DATE}"
+                        hAlign="Center"
+                         width="150px"
                     >
-                        <Text text="Consumption Date" />
+                        <Text text="Consumption Date"  />
                     </Column>
 
                     <Column
@@ -411,83 +427,84 @@
                         minScreenWidth="Tablet"
                         demandPopin="true"
                         visible="{data>/columns/CONSUMPTION_DATE}"
+                        hAlign="Center"
+                         width="150px"
+                        
                     >
-                        <Text text="Consumption Time" />
+                        <Text text="Consumption Time"  />
                     </Column>
                 </columns>
                 <items>
                     <ColumnListItem>
-                        <Text text="{data>PLANT}" />
-
+                        <Text text="{data>PLANT}"  />
+                        <ObjectIdentifier
+                            title="{data>HEADER_MATERIAL}"
+                            text="{data>HEADER_MATERIAL_DESCRIPTION}"
+                            
+                        />
+                        <Text text="{data>ORDER_NO}"  />
+                        <Text text="{data>ORDER_STATUS}"  />
                         <Text text="{data>WORKCENTER}" />
                         <Text text="{data>WORKCENTER_DESCRIPTION}" />
 
-                        <Text text="{data>OPERATOR}" />
+                        <Text text="{data>OPERATOR}"/>
 
-                        <Text text="{data>ORDER_NO}" />
-                        <Text text="{data>ORDER_STATUS}" />
-                        <Text text="{data>BATCH_NUMBER}" />
+                        
+                        
+                        <Text text="{data>BATCH_NUMBER}"  />
 
                         <Text text="{data>RESOURCE}" />
 
                         <!-- Combined Material and Material Consumption together -->
-                        <ObjectIdentifier
-                            title="{data>HEADER_MATERIAL}"
-                            text="{data>HEADER_MATERIAL_DESCRIPTION}"
-                        />
+                        
 
                         <!-- Combined Component and Component Description together -->
 
                         <ObjectIdentifier
                             title="{data>COMPONENT}"
                             text="{data>COMPONENT_DESCRIPTION}"
+                           
                         />
 
                         <Text text="{data>TARGET_IN_KG}" />
                         <Text text="{data>UPPER_TOL_IN_KG}" />
                         <Text text="{data>LOWER_TOL_IN_KG}" />
 
-                        <Text text="{data>QTY_IN_KG}" />
+                        <Text text="{data>QTY_IN_KG}"/>
                         <Text text="KG" />
                         <Text
                             text="{parts: [{path: 'data>CONSUMPTION_DATE'}], formatter: '.formatDate'}"
+                            
                         />
                         <Text
                             text="{parts: [{path: 'data>CONSUMPTION_DATE'}], formatter: '.formatTime'}"
+
+                            
                         />
                     </ColumnListItem>
                 </items>
                 <dependents>
                     <ColumnListItem id="idTableListItem">
                         <Text text="{data>PLANT}" />
-
-                        <Text text="{data>WORKCENTER}" />
-                        <Text text="{data>WORKCENTER_DESCRIPTION}" />
-
-                        <Text text="{data>OPERATOR}" />
-
-                        <Text text="{data>ORDER_NO}" />
-                        <Text text="{data>ORDER_STATUS}" />
-                        <Text text="{data>BATCH_NUMBER}" />
-
-                        <Text text="{data>RESOURCE}" />
-                        <!-- Combined Material and Material Description together -->
                         <ObjectIdentifier
                             title="{data>HEADER_MATERIAL}"
                             text="{data>HEADER_MATERIAL_DESCRIPTION}"
                         />
+                        <Text text="{data>ORDER_NO}" />
+                        <Text text="{data>ORDER_STATUS}" />
 
-                        <!-- Combined Component and Component Description together -->
-
+                        <Text text="{data>WORKCENTER}" />
+                        <Text text="{data>WORKCENTER_DESCRIPTION}" />
+                        <Text text="{data>RESOURCE}" />
                         <ObjectIdentifier
                             title="{data>COMPONENT}"
                             text="{data>COMPONENT_DESCRIPTION}"
                         />
-
-                        <Text text="{data>TARGET_IN_KG}" />
+                        <Text text="{data>BATCH_NUMBER}" />
+                        <Text text="{data>OPERATOR}" />
                         <Text text="{data>UPPER_TOL_IN_KG}" />
+                        <Text text="{data>TARGET_IN_KG}" />
                         <Text text="{data>LOWER_TOL_IN_KG}" />
-
                         <Text text="{data>QTY_IN_KG}" />
                         <Text text="KG" />
                         <!-- 
@@ -501,6 +518,8 @@
                     </ColumnListItem>
                 </dependents>
             </Table>
+            </ScrollContainer>
+             </VBox>
             <!-- </ScrollContainer> -->
         </f:content>
     </f:DynamicPage>
